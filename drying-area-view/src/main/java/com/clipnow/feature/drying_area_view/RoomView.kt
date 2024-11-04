@@ -75,8 +75,8 @@ class RoomView @JvmOverloads constructor(
         calculateScaleAndOffset()
     }
 
-    private fun toCanvasX(x: Float): Float = (x + RoomDataConsts.WALL_LENGTH_LINE_OFFSET) * scaleX + offsetX
-    private fun toCanvasY(y: Float): Float = (y + RoomDataConsts.WALL_LENGTH_LINE_OFFSET) * scaleY + offsetY
+    private fun toCanvasX(x: Float): Float = x * scaleX + offsetX
+    private fun toCanvasY(y: Float): Float = y * scaleY + offsetY
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
