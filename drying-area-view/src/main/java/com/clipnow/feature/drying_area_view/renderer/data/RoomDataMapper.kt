@@ -1,7 +1,6 @@
 package com.clipnow.feature.drying_area_view.renderer.data
 
 import android.content.Context
-import android.graphics.RectF
 import com.clipnow.feature.drying_area_view.mock.RoomEntity
 import com.clipnow.feature.drying_area_view.mock.WallDoorEntity
 import com.clipnow.feature.drying_area_view.mock.WallEntity
@@ -9,11 +8,10 @@ import com.clipnow.feature.drying_area_view.mock.WallOpeningEntity
 import com.clipnow.feature.drying_area_view.mock.WallWindowEntity
 import com.clipnow.feature.drying_area_view.renderer.RoomMathUtils
 import com.clipnow.feature.drying_area_view.renderer.dpToPx
+import java.util.Locale
 import kotlin.math.atan2
 import kotlin.math.cos
-import kotlin.math.pow
 import kotlin.math.sin
-import kotlin.math.sqrt
 
 class RoomDataMapper(private val context: Context) {
 
@@ -27,7 +25,10 @@ class RoomDataMapper(private val context: Context) {
         val dryingArea = DryingAreaData(
             centerX = centerX,
             centerY = centerY,
-            areaText = String.format("%.2f ft²", RoomMathUtils.convertSquareCmToSquareFeet(roomEntity.dryingArea.areaSquare))
+            areaText = String.format(
+                "%.2f ft²",
+                RoomMathUtils.convertSquareCmToSquareFeet(roomEntity.dryingArea.areaSquare)
+            )
         )
 
         val perimeter = PerimeterData(
@@ -35,10 +36,12 @@ class RoomDataMapper(private val context: Context) {
             wallThickness = wallThickness
         )
 
-        return RoomData(
+        val roomData = RoomData(
             perimeter = perimeter,
             dryingArea = dryingArea
         )
+
+        return applyOffsetToRoom(roomData)
     }
 
     private fun mapWalls(wallEntities: List<WallEntity>, wallThickness: Float): List<WallData> {
@@ -63,7 +66,8 @@ class RoomDataMapper(private val context: Context) {
         val wallThickness = wallEntity.thickness
 
         // Calculate the total wall length
-        val wallLength = RoomMathUtils.calculateLength(wallEntity.start.x, wallEntity.start.y, wallEntity.end.x, wallEntity.end.y)
+        val wallLength =
+            RoomMathUtils.calculateLength(wallEntity.start.x, wallEntity.start.y, wallEntity.end.x, wallEntity.end.y)
         val wallLengthFt = RoomMathUtils.convertCmToFeet(wallLength)
 
         // Offset for the entire wall length line (considering the wall thickness)
@@ -71,7 +75,8 @@ class RoomDataMapper(private val context: Context) {
         val additionalOffset = context.dpToPx(wallThickness / 2)  // Additional offset to account for wall thickness
 
         // Calculate angle for wall
-        val angle = RoomMathUtils.calculateAngle(wallEntity.start.x, wallEntity.start.y, wallEntity.end.x, wallEntity.end.y)
+        val angle =
+            RoomMathUtils.calculateAngle(wallEntity.start.x, wallEntity.start.y, wallEntity.end.x, wallEntity.end.y)
 
         // Calculate coordinates for the offset line representing the entire wall length
         val (startXOffset, startYOffset, endXOffset, endYOffset) = RoomMathUtils.calculateOffsetCoordinates(
@@ -101,7 +106,7 @@ class RoomDataMapper(private val context: Context) {
                 startY = adjustedStartY,
                 endX = adjustedEndX,
                 endY = adjustedEndY,
-                text = String.format("%.1f ft", wallLengthFt),
+                text = String.format(Locale.US, "%.1f ft", wallLengthFt),
                 textX = textX,
                 textY = textY,
                 textAngle = angle,
@@ -114,7 +119,8 @@ class RoomDataMapper(private val context: Context) {
 
         // Processing segments for windows, openings, and doors
         val windowSegments = wallEntity.windows?.map { Segment(it.startX, it.startY, it.endX, it.endY) } ?: emptyList()
-        val openingSegments = wallEntity.openings?.map { Segment(it.startX, it.startY, it.endX, it.endY) } ?: emptyList()
+        val openingSegments =
+            wallEntity.openings?.map { Segment(it.startX, it.startY, it.endX, it.endY) } ?: emptyList()
         val doorSegments = wallEntity.doors?.map { Segment(it.startX, it.startY, it.endX, it.endY) } ?: emptyList()
 
         // Combine all segments and sort by their distance along the wall
@@ -130,7 +136,8 @@ class RoomDataMapper(private val context: Context) {
         for (segment in segments) {
             if (!RoomMathUtils.isAtPoint(currentStartX, currentStartY, segment.startX, segment.startY)) {
                 // Calculate the segment between current start and segment start
-                val segmentLength = RoomMathUtils.calculateLength(currentStartX, currentStartY, segment.startX, segment.startY)
+                val segmentLength =
+                    RoomMathUtils.calculateLength(currentStartX, currentStartY, segment.startX, segment.startY)
                 val segmentLengthFt = RoomMathUtils.convertCmToFeet(segmentLength)
 
                 // Calculate offset coordinates for segment
@@ -139,24 +146,32 @@ class RoomDataMapper(private val context: Context) {
                 )
 
                 // Adjust segment coordinates if it matches wall's start or end
-                val adjustedSegmentStartX = if (RoomMathUtils.isAtPoint(currentStartX, currentStartY, wallEntity.start.x, wallEntity.start.y)) {
-                    segmentStartXOffset - additionalOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
-                } else segmentStartXOffset
-                val adjustedSegmentStartY = if (RoomMathUtils.isAtPoint(currentStartX, currentStartY, wallEntity.start.x, wallEntity.start.y)) {
-                    segmentStartYOffset - additionalOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
-                } else segmentStartYOffset
-                val adjustedSegmentEndX = if (RoomMathUtils.isAtPoint(segment.startX, segment.startY, wallEntity.end.x, wallEntity.end.y)) {
-                    segmentEndXOffset + additionalOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
-                } else segmentEndXOffset
-                val adjustedSegmentEndY = if (RoomMathUtils.isAtPoint(segment.startX, segment.startY, wallEntity.end.x, wallEntity.end.y)) {
-                    segmentEndYOffset + additionalOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
-                } else segmentEndYOffset
+                val adjustedSegmentStartX =
+                    if (RoomMathUtils.isAtPoint(currentStartX, currentStartY, wallEntity.start.x, wallEntity.start.y)) {
+                        segmentStartXOffset - additionalOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
+                    } else segmentStartXOffset
+                val adjustedSegmentStartY =
+                    if (RoomMathUtils.isAtPoint(currentStartX, currentStartY, wallEntity.start.x, wallEntity.start.y)) {
+                        segmentStartYOffset - additionalOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
+                    } else segmentStartYOffset
+                val adjustedSegmentEndX =
+                    if (RoomMathUtils.isAtPoint(segment.startX, segment.startY, wallEntity.end.x, wallEntity.end.y)) {
+                        segmentEndXOffset + additionalOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
+                    } else segmentEndXOffset
+                val adjustedSegmentEndY =
+                    if (RoomMathUtils.isAtPoint(segment.startX, segment.startY, wallEntity.end.x, wallEntity.end.y)) {
+                        segmentEndYOffset + additionalOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
+                    } else segmentEndYOffset
 
                 // Calculate dash points for the segment length
-                val dashSegmentStartX = adjustedSegmentStartX - segmentOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
-                val dashSegmentStartY = adjustedSegmentStartY + segmentOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
-                val dashSegmentEndX = adjustedSegmentEndX - segmentOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
-                val dashSegmentEndY = adjustedSegmentEndY + segmentOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
+                val dashSegmentStartX =
+                    adjustedSegmentStartX - segmentOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
+                val dashSegmentStartY =
+                    adjustedSegmentStartY + segmentOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
+                val dashSegmentEndX =
+                    adjustedSegmentEndX - segmentOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
+                val dashSegmentEndY =
+                    adjustedSegmentEndY + segmentOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
 
                 // Calculate center of the text for the segment length
                 val segmentTextX = (adjustedSegmentStartX + adjustedSegmentEndX) / 2
@@ -168,7 +183,7 @@ class RoomDataMapper(private val context: Context) {
                         startY = adjustedSegmentStartY,
                         endX = adjustedSegmentEndX,
                         endY = adjustedSegmentEndY,
-                        text = String.format("%.1f ft", segmentLengthFt),
+                        text = String.format(Locale.US,"%.1f ft", segmentLengthFt),
                         textX = segmentTextX,
                         textY = segmentTextY,
                         textAngle = angle,
@@ -186,7 +201,8 @@ class RoomDataMapper(private val context: Context) {
 
         // Add the final segment if there's wall remaining
         if (!RoomMathUtils.isAtPoint(currentStartX, currentStartY, wallEntity.end.x, wallEntity.end.y)) {
-            val segmentLength = RoomMathUtils.calculateLength(currentStartX, currentStartY, wallEntity.end.x, wallEntity.end.y)
+            val segmentLength =
+                RoomMathUtils.calculateLength(currentStartX, currentStartY, wallEntity.end.x, wallEntity.end.y)
             val segmentLengthFt = RoomMathUtils.convertCmToFeet(segmentLength)
 
             // Calculate offset coordinates for the last segment
@@ -195,22 +211,28 @@ class RoomDataMapper(private val context: Context) {
             )
 
             // Adjust final segment's coordinates if it matches wall's end
-            val adjustedSegmentStartX = if (RoomMathUtils.isAtPoint(currentStartX, currentStartY, wallEntity.start.x, wallEntity.start.y)) {
-                segmentStartXOffset - additionalOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
-            } else segmentStartXOffset
-            val adjustedSegmentStartY = if (RoomMathUtils.isAtPoint(currentStartX, currentStartY, wallEntity.start.x, wallEntity.start.y)) {
-                segmentStartYOffset - additionalOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
-            } else segmentStartYOffset
-            val adjustedSegmentEndX = if (RoomMathUtils.isAtPoint(wallEntity.end.x, wallEntity.end.y, wallEntity.end.x, wallEntity.end.y)) {
-                segmentEndXOffset + additionalOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
-            } else segmentEndXOffset
-            val adjustedSegmentEndY = if (RoomMathUtils.isAtPoint(wallEntity.end.x, wallEntity.end.y, wallEntity.end.x, wallEntity.end.y)) {
-                segmentEndYOffset + additionalOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
-            } else segmentEndYOffset
+            val adjustedSegmentStartX =
+                if (RoomMathUtils.isAtPoint(currentStartX, currentStartY, wallEntity.start.x, wallEntity.start.y)) {
+                    segmentStartXOffset - additionalOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
+                } else segmentStartXOffset
+            val adjustedSegmentStartY =
+                if (RoomMathUtils.isAtPoint(currentStartX, currentStartY, wallEntity.start.x, wallEntity.start.y)) {
+                    segmentStartYOffset - additionalOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
+                } else segmentStartYOffset
+            val adjustedSegmentEndX =
+                if (RoomMathUtils.isAtPoint(wallEntity.end.x, wallEntity.end.y, wallEntity.end.x, wallEntity.end.y)) {
+                    segmentEndXOffset + additionalOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
+                } else segmentEndXOffset
+            val adjustedSegmentEndY =
+                if (RoomMathUtils.isAtPoint(wallEntity.end.x, wallEntity.end.y, wallEntity.end.x, wallEntity.end.y)) {
+                    segmentEndYOffset + additionalOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
+                } else segmentEndYOffset
 
             // Calculate dash points for the final segment length
-            val dashSegmentStartX = adjustedSegmentStartX - segmentOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
-            val dashSegmentStartY = adjustedSegmentStartY + segmentOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
+            val dashSegmentStartX =
+                adjustedSegmentStartX - segmentOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
+            val dashSegmentStartY =
+                adjustedSegmentStartY + segmentOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
             val dashSegmentEndX = adjustedSegmentEndX - segmentOffset * sin(Math.toRadians(angle.toDouble())).toFloat()
             val dashSegmentEndY = adjustedSegmentEndY + segmentOffset * cos(Math.toRadians(angle.toDouble())).toFloat()
 
@@ -224,7 +246,7 @@ class RoomDataMapper(private val context: Context) {
                     startY = adjustedSegmentStartY,
                     endX = adjustedSegmentEndX,
                     endY = adjustedSegmentEndY,
-                    text = String.format("%.1f ft", segmentLengthFt),
+                    text = String.format(Locale.US,"%.1f ft", segmentLengthFt),
                     textX = segmentTextX,
                     textY = segmentTextY,
                     textAngle = angle,
@@ -314,7 +336,6 @@ class RoomDataMapper(private val context: Context) {
             )
         } ?: emptyList()
     }
-
 
 
     private data class Segment(

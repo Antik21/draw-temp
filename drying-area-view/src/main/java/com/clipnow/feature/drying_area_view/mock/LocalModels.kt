@@ -41,7 +41,7 @@ data class WallEntity(
     val doors: List<WallDoorEntity>?,
 )
 
-class WallDoorEntity(
+data class WallDoorEntity(
     @ColumnInfo("uid")
     val uid: String,
     @ColumnInfo("startX")
@@ -54,7 +54,7 @@ class WallDoorEntity(
     val endY: Float,
 )
 
-class WallOpeningEntity(
+data class WallOpeningEntity(
     @ColumnInfo("uid")
     val uid: String,
     @ColumnInfo("startX")
@@ -67,7 +67,7 @@ class WallOpeningEntity(
     val endY: Float
 )
 
-class WallWindowEntity(
+data class WallWindowEntity(
     @ColumnInfo("uid")
     val uid: String,
     @ColumnInfo("startX")

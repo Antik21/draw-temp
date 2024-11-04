@@ -3,7 +3,7 @@ package com.clipnow.feature.drying_area_view.renderer.data
 import android.graphics.RectF
 
 
-class RoomData(val perimeter: PerimeterData, val dryingArea: DryingAreaData) {
+data class RoomData(val perimeter: PerimeterData, val dryingArea: DryingAreaData) {
     val bounds: RectF
 
     init {
