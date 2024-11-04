@@ -32,10 +32,11 @@ class DoorRenderer(context: Context) : ElementRenderer<WallDoorData> {
     private val arcPaint = Paint().apply {
         color = Color.BLACK
         style = Paint.Style.STROKE
-        strokeWidth = 2f // Толщина дуги
+        strokeWidth = context.dpToPx(1f)
         isAntiAlias = true
     }
 
+    private val doorPath = Path()
     private val doorArcPath = Path()
 
     override fun render(
@@ -54,8 +55,29 @@ class DoorRenderer(context: Context) : ElementRenderer<WallDoorData> {
         val rectEndX2 = toCanvasX(element.rectEndX2)
         val rectEndY2 = toCanvasY(element.rectEndY2)
 
+        // Начало и радиус дуги для отображения направления открытия двери
+        val arcStartX = toCanvasX(element.arcStartX)
+        val arcStartY = toCanvasY(element.arcStartY)
+        val arcRadius = toCanvasX(element.arcRadius) - toCanvasX(0f)
+
+        // Рисуем дугу для направления открытия двери
+        doorArcPath.reset()
+        doorArcPath.moveTo(rectStartX1, rectStartY1)
+        doorArcPath.arcTo(
+            RectF(
+                arcStartX - arcRadius,
+                arcStartY - arcRadius,
+                arcStartX + arcRadius,
+                arcStartY + arcRadius
+            ),
+            element.angleDegrees + 90,
+            -90f
+        )
+        canvas.drawPath(doorArcPath, arcPaint)
+
         // Рисуем серый прямоугольник двери
-        val doorPath = Path().apply {
+        doorPath.reset()
+        val doorPath = doorPath.apply {
             moveTo(rectStartX1, rectStartY1)
             lineTo(rectEndX1, rectEndY1)
             lineTo(rectEndX2, rectEndY2)
@@ -64,27 +86,5 @@ class DoorRenderer(context: Context) : ElementRenderer<WallDoorData> {
         }
         canvas.drawPath(doorPath, doorPaintFill)
         canvas.drawPath(doorPath, doorPaintStroke)
-
-        // Дуга для направления открытия двери
-        val arcStartX = toCanvasX(element.arcStartX)
-        val arcStartY = toCanvasY(element.arcStartY)
-
-        // Создаем Path для дуги
-        with(doorArcPath) {
-            reset()
-            moveTo(rectEndX1, rectEndY1)
-            arcTo(
-                arcStartX - element.arcRadius,
-                arcStartY - element.arcRadius,
-                arcStartX + element.arcRadius,
-                arcStartY + element.arcRadius,
-                element.angleDegrees,
-                90f,
-                false
-            )
-        }
-
-        // Рисуем дугу
-        canvas.drawPath(doorArcPath, arcPaint)
     }
 }

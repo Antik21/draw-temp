@@ -9,5 +9,9 @@ data class LengthLineData (
     val textX : Float,
     val textY : Float,
     val textAngle : Float,
-    val text: String
+    val text: String,
+    val dashStartX: Float,
+    val dashStartY: Float,
+    val dashEndX: Float,
+    val dashEndY: Float
 )

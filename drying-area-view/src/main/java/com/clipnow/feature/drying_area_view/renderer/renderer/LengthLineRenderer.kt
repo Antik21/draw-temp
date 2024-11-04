@@ -4,19 +4,28 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PathEffect
+import android.graphics.DashPathEffect
 import com.clipnow.feature.drying_area_view.renderer.data.LengthLineData
 import com.clipnow.feature.drying_area_view.renderer.dpToPx
 import kotlin.math.pow
 import kotlin.math.sqrt
-
 
 class LengthLineRenderer(context: Context) : ElementRenderer<LengthLineData> {
 
     private val linePaint = Paint().apply {
         color = Color.BLACK
         style = Paint.Style.STROKE
-        strokeWidth = context.dpToPx(1f) // Толщина линии
+        strokeWidth = context.dpToPx(1f)
         isAntiAlias = true
+    }
+
+    private val dashPaint = Paint().apply {
+        color = Color.BLACK
+        style = Paint.Style.STROKE
+        strokeWidth = context.dpToPx(1f)
+        isAntiAlias = true
+        pathEffect = DashPathEffect(floatArrayOf(context.dpToPx(5f), context.dpToPx(3f)), 0f)  // Настройка для пунктирной линии
     }
 
     private val arrowPaint = Paint().apply {
@@ -27,16 +36,15 @@ class LengthLineRenderer(context: Context) : ElementRenderer<LengthLineData> {
 
     private val textPaint = Paint().apply {
         color = Color.BLACK
-        textSize = context.dpToPx(8f) // Размер текста, настройте под нужный масштаб
+        textSize = context.dpToPx(8f)
         textAlign = Paint.Align.CENTER
         isAntiAlias = true
     }
 
-    private val arrowSize = context.dpToPx(3f)  // Размер стрелок, настройте под нужный масштаб
-    private val padding = context.dpToPx(3f)  // Дополнительный отступ вокруг текста
+    private val arrowSize = context.dpToPx(3f)
+    private val padding = context.dpToPx(3f)
 
     override fun render(canvas: Canvas, element: LengthLineData, toCanvasX: (Float) -> Float, toCanvasY: (Float) -> Float) {
-        // Преобразование координат начала и конца линии в координаты Canvas
         val startX = toCanvasX(element.startX)
         val startY = toCanvasY(element.startY)
         val endX = toCanvasX(element.endX)
@@ -76,9 +84,18 @@ class LengthLineRenderer(context: Context) : ElementRenderer<LengthLineData> {
         canvas.rotate(element.textAngle, textX, textY)
         canvas.drawText(element.text, textX, textY - (textPaint.descent() + textPaint.ascent()) / 2, textPaint)
         canvas.restore()
+
+        // Преобразование координат пунктирных линий
+        val dashStartXCanvas = toCanvasX(element.dashStartX)
+        val dashStartYCanvas = toCanvasY(element.dashStartY)
+        val dashEndXCanvas = toCanvasX(element.dashEndX)
+        val dashEndYCanvas = toCanvasY(element.dashEndY)
+
+        // Рисуем пунктирные линии от точек на стене до начала и конца длины сегмента
+        canvas.drawLine(dashStartXCanvas, dashStartYCanvas, startX, startY, dashPaint)
+        canvas.drawLine(dashEndXCanvas, dashEndYCanvas, endX, endY, dashPaint)
     }
 
-    // Метод для рисования стрелок на концах линии
     private fun drawArrow(canvas: Canvas, x: Float, y: Float, angle: Float) {
         val path = android.graphics.Path()
         path.moveTo(x, y)
