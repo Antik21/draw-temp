@@ -99,6 +99,13 @@ class RoomDataMapper(private val context: Context) {
         val textX = (adjustedStartX + adjustedEndX) / 2
         val textY = (adjustedStartY + adjustedEndY) / 2
 
+        // Correct the angle for the text to be within -120 to 120 degrees
+        val textAngle = when {
+            angle > 120 -> angle - 180
+            angle < -120 -> angle + 180
+            else -> angle
+        }
+
         // Add the entire wall length line with adjusted start and end points, and updated dash points
         lengthLines.add(
             LengthLineData(
@@ -109,7 +116,7 @@ class RoomDataMapper(private val context: Context) {
                 text = String.format(Locale.US, "%.1f ft", wallLengthFt),
                 textX = textX,
                 textY = textY,
-                textAngle = angle,
+                textAngle = textAngle,
                 dashStartX = dashStartX,
                 dashStartY = dashStartY,
                 dashEndX = dashEndX,
@@ -189,7 +196,7 @@ class RoomDataMapper(private val context: Context) {
                         text = String.format(Locale.US,"%.1f ft", segmentLengthFt),
                         textX = segmentTextX,
                         textY = segmentTextY,
-                        textAngle = angle,
+                        textAngle = textAngle,
                         dashStartX = dashSegmentStartX,
                         dashStartY = dashSegmentStartY,
                         dashEndX = dashSegmentEndX,
@@ -252,7 +259,7 @@ class RoomDataMapper(private val context: Context) {
                     text = String.format(Locale.US,"%.1f ft", segmentLengthFt),
                     textX = segmentTextX,
                     textY = segmentTextY,
-                    textAngle = angle,
+                    textAngle = textAngle,
                     dashStartX = dashSegmentStartX,
                     dashStartY = dashSegmentStartY,
                     dashEndX = dashSegmentEndX,
