@@ -1,27 +1,53 @@
 package com.clipnow.feature.drying_area_view.renderer.renderer
 
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.graphics.Paint
+import android.graphics.Path
 import com.clipnow.feature.drying_area_view.renderer.data.WallOpeningData
+import com.clipnow.feature.drying_area_view.renderer.dpToPx
 
 
-class OpeningRenderer : ElementRenderer<WallOpeningData> {
+class OpeningRenderer(context: Context) : ElementRenderer<WallOpeningData> {
 
-    private val paint = Paint().apply {
-        color = Color.GRAY
-        strokeWidth = 4f
+    private val fillPaint = Paint().apply {
+        color = Color.WHITE
+        style = Paint.Style.FILL
+        isAntiAlias = true
+    }
+
+    private val strokePaint = Paint().apply {
+        color = Color.BLACK
         style = Paint.Style.STROKE
+        strokeWidth = context.dpToPx(1f) // Толщина границы
+        isAntiAlias = true
+        pathEffect = DashPathEffect(floatArrayOf(context.dpToPx(2f), context.dpToPx(2f)), 0f)  // Настройка для пунктирной линии
     }
 
     override fun render(canvas: Canvas, element: WallOpeningData, toCanvasX: (Float) -> Float, toCanvasY: (Float) -> Float) {
-        // Convert opening coordinates to canvas coordinates
-        val startX = toCanvasX(element.startX)
-        val startY = toCanvasY(element.startY)
-        val endX = toCanvasX(element.endX)
-        val endY = toCanvasY(element.endY)
+        // Конвертируем координаты прямоугольника открытия в координаты Canvas
+        val rectStartX1 = toCanvasX(element.rectStartX1)
+        val rectStartY1 = toCanvasY(element.rectStartY1)
+        val rectEndX1 = toCanvasX(element.rectEndX1)
+        val rectEndY1 = toCanvasY(element.rectEndY1)
+        val rectStartX2 = toCanvasX(element.rectStartX2)
+        val rectStartY2 = toCanvasY(element.rectStartY2)
+        val rectEndX2 = toCanvasX(element.rectEndX2)
+        val rectEndY2 = toCanvasY(element.rectEndY2)
 
-        // Draw the opening line along the wall
-        canvas.drawLine(startX, startY, endX, endY, paint)
+        // Создаем Path для прямоугольника открытия
+        val path = Path().apply {
+            moveTo(rectStartX1, rectStartY1)
+            lineTo(rectEndX1, rectEndY1)
+            lineTo(rectEndX2, rectEndY2)
+            lineTo(rectStartX2, rectStartY2)
+            close()
+        }
+
+        // Рисуем серый прямоугольник и черную границу
+        canvas.drawPath(path, fillPaint)
+        canvas.drawPath(path, strokePaint)
     }
 }

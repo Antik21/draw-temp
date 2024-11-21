@@ -39,8 +39,8 @@ class RoomView @JvmOverloads constructor(
 
     // Lazy initializations for each renderer
     private val perimeterRenderer by lazy { PerimeterRenderer(context) }
-    private val windowRenderer by lazy { WindowRenderer() }
-    private val openingRenderer by lazy { OpeningRenderer() }
+    private val windowRenderer by lazy { WindowRenderer(context) }
+    private val openingRenderer by lazy { OpeningRenderer(context) }
     private val doorRenderer by lazy { DoorRenderer(context) }
     private val dryingAreaRenderer by lazy { DryingAreaRenderer(context) }
     private val lengthLineRenderer by lazy { LengthLineRenderer(context) }

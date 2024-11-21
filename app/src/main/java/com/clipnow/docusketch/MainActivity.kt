@@ -30,7 +30,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun showRoomData() = lifecycleScope.launch(Dispatchers.Default){
         val result = RoomRepo.getRooms()
-        val roomData = roomMapper.mapRoom(result.first())
+        val room = result.last()
+        val roomData = roomMapper.mapRoom(room)
 
         findViewById<RoomView>(R.id.room_view)?.setRoomData(roomData)
     }

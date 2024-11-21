@@ -140,6 +140,220 @@ object RoomRepo {
 }
 """
 
+    private const val jsonData2 = """
+{
+     "rooms": [
+            {
+              "panoIds": [
+                "668cdf5d97260555dd08417f",
+                "668cdf5e19472941e899cee9"
+              ],
+              "status": "APPROVED",
+              "data": {
+                "name": "room2",
+                "version": "0.1",
+                "ceilingHeight": null,
+                "corners": [
+                  {
+                    "uid": "f6c61772-024d-ef63-e937-86682e297060",
+                    "origin": {
+                      "x": 55.88,
+                      "y": -268.224
+                    }
+                  },
+                  {
+                    "uid": "c6157467-23f7-b75c-a1ac-7725dbc4a861",
+                    "origin": {
+                      "x": 529.336,
+                      "y": -268.224
+                    }
+                  },
+                  {
+                    "uid": "12589ef1-685c-4e1f-f5be-037b44976a09",
+                    "origin": {
+                      "x": 529.336,
+                      "y": 284.48
+                    }
+                  },
+                  {
+                    "uid": "705f6ac9-c299-a9e2-912b-3f868bfc68d5",
+                    "origin": {
+                      "x": 55.88,
+                      "y": 284.48
+                    }
+                  }
+                ],
+                "walls": [
+                  {
+                    "uid": "9c768be1-ab2e-a63e-1ac9-5f675eebfca7",
+                    "start": "f6c61772-024d-ef63-e937-86682e297060",
+                    "end": "c6157467-23f7-b75c-a1ac-7725dbc4a861",
+                    "thickness": 10.16,
+                    "windows": null,
+                    "openings": null,
+                    "doors": null
+                  },
+                  {
+                    "uid": "16e8dc11-f181-db53-b9ac-1b26d3e2d376",
+                    "start": "c6157467-23f7-b75c-a1ac-7725dbc4a861",
+                    "end": "12589ef1-685c-4e1f-f5be-037b44976a09",
+                    "thickness": 10.16,
+                    "windows": null,
+                    "openings": null,
+                    "doors": null
+                  },
+                  {
+                    "uid": "461f68b7-c0a8-8c8f-b610-57827d25b60e",
+                    "start": "12589ef1-685c-4e1f-f5be-037b44976a09",
+                    "end": "705f6ac9-c299-a9e2-912b-3f868bfc68d5",
+                    "thickness": 10.16,
+                    "windows": null,
+                    "openings": null,
+                    "doors": null
+                  },
+                  {
+                    "uid": "8905f8f6-40f0-2976-fcc6-b6b252639cca",
+                    "start": "f6c61772-024d-ef63-e937-86682e297060",
+                    "end": "705f6ac9-c299-a9e2-912b-3f868bfc68d5",
+                    "thickness": 10.16,
+                    "windows": null,
+                    "openings": null,
+                    "doors": null
+                  }
+                ]
+              },
+              "totalDimensions": {
+                "floorPerimeter": 2011.6800000000003,
+                "ceilingPerimeter": 2011.6800000000003,
+                "floorSquare": 251358.4650240001,
+                "ceilingSquare": 251358.4650240001,
+                "wallSquare": 500437.7088,
+                "volumeOfTheRoom": 6.1291248111452185E7
+              }
+            },
+            {
+              "panoIds": [
+                "668cdf5f97260555dd084180"
+              ],
+              "status": "APPROVED",
+              "data": {
+                "name": "room1",
+                "version": "0.1",
+                "ceilingHeight": null,
+                "corners": [
+                  {
+                    "uid": "aadcb549-01db-e527-baaf-93ad3d099fe4",
+                    "origin": {
+                      "x": -378.968,
+                      "y": -442.976
+                    }
+                  },
+                  {
+                    "uid": "2b9e95ac-38ed-ec53-f7bb-52bcaa0822e5",
+                    "origin": {
+                      "x": 657.352,
+                      "y": -442.976
+                    }
+                  },
+                  {
+                    "uid": "25360cc8-3004-6032-2df1-900b95f340e2",
+                    "origin": {
+                      "x": 657.352,
+                      "y": 719.328
+                    }
+                  },
+                  {
+                    "uid": "8592f52d-3e87-3226-2f28-9293541f3e00",
+                    "origin": {
+                      "x": 3.048,
+                      "y": 719.328
+                    }
+                  },
+                  {
+                    "uid": "136bf799-9acf-1704-6818-6a80a3da17e0",
+                    "origin": {
+                      "x": 3.048,
+                      "y": 300.736
+                    }
+                  },
+                  {
+                    "uid": "8d7325b1-7b66-1c4f-5bb9-4959dfae3a0a",
+                    "origin": {
+                      "x": -378.968,
+                      "y": 300.736
+                    }
+                  }
+                ],
+                "walls": [
+                  {
+                    "uid": "ffb2a572-3f34-6ae7-bbde-086d84e6c97f",
+                    "start": "aadcb549-01db-e527-baaf-93ad3d099fe4",
+                    "end": "2b9e95ac-38ed-ec53-f7bb-52bcaa0822e5",
+                    "thickness": 10.16,
+                    "windows": null,
+                    "openings": null,
+                    "doors": null
+                  },
+                  {
+                    "uid": "60e8d55c-a3ca-61f4-2e44-039bd93e1d25",
+                    "start": "2b9e95ac-38ed-ec53-f7bb-52bcaa0822e5",
+                    "end": "25360cc8-3004-6032-2df1-900b95f340e2",
+                    "thickness": 10.16,
+                    "windows": null,
+                    "openings": null,
+                    "doors": null
+                  },
+                  {
+                    "uid": "ad3f8677-3e33-aa0f-c199-609e5e5a55bc",
+                    "start": "25360cc8-3004-6032-2df1-900b95f340e2",
+                    "end": "8592f52d-3e87-3226-2f28-9293541f3e00",
+                    "thickness": 10.16,
+                    "windows": null,
+                    "openings": null,
+                    "doors": null
+                  },
+                  {
+                    "uid": "b9b14fd0-d0b4-4f81-3434-47e0ab454439",
+                    "start": "8592f52d-3e87-3226-2f28-9293541f3e00",
+                    "end": "136bf799-9acf-1704-6818-6a80a3da17e0",
+                    "thickness": 10.16,
+                    "windows": null,
+                    "openings": null,
+                    "doors": null
+                  },
+                  {
+                    "uid": "63933635-672d-466e-5d26-61d0585c9ccb",
+                    "start": "136bf799-9acf-1704-6818-6a80a3da17e0",
+                    "end": "8d7325b1-7b66-1c4f-5bb9-4959dfae3a0a",
+                    "thickness": 10.16,
+                    "windows": null,
+                    "openings": null,
+                    "doors": null
+                  },
+                  {
+                    "uid": "339f0fc9-cc2a-7ec2-2181-7fcab3251dee",
+                    "start": "8d7325b1-7b66-1c4f-5bb9-4959dfae3a0a",
+                    "end": "aadcb549-01db-e527-baaf-93ad3d099fe4",
+                    "thickness": 10.16,
+                    "windows": null,
+                    "openings": null,
+                    "doors": null
+                  }
+                ]
+              },
+              "totalDimensions": {
+                "floorPerimeter": 4356.608,
+                "ceilingPerimeter": 4356.608,
+                "floorSquare": 1022375.2455679998,
+                "ceilingSquare": 1022375.2455679998,
+                "wallSquare": 1072224.95232,
+                "volumeOfTheRoom": 2.4929597987930107E8
+              }
+            }
+          ]
+}
+"""
+
     fun getRooms(): List<RoomEntity> {
 
         val apiRoomsResponse = parseApiRoomsResponseUsingGson(jsonData)

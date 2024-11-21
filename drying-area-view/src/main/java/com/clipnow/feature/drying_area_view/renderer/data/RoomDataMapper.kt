@@ -54,8 +54,8 @@ class RoomDataMapper(private val context: Context) {
                 endX = wallEntity.end.x,
                 endY = wallEntity.end.y,
                 lengthLines = lengthLines,
-                windows = mapWallWindows(wallEntity.windows),
-                openings = mapWallOpenings(wallEntity.openings),
+                windows = mapWallWindows(wallEntity.windows, wallThickness),
+                openings = mapWallOpenings(wallEntity.openings, wallThickness),
                 doors = mapWallDoors(wallEntity.doors, wallThickness)
             )
         }
@@ -116,6 +116,9 @@ class RoomDataMapper(private val context: Context) {
                 dashEndY = dashEndY
             )
         )
+
+        if(wallEntity.windows.isNullOrEmpty() && wallEntity.openings.isNullOrEmpty() && wallEntity.doors.isNullOrEmpty())
+            return lengthLines
 
         // Processing segments for windows, openings, and doors
         val windowSegments = wallEntity.windows?.map { Segment(it.startX, it.startY, it.endX, it.endY) } ?: emptyList()
@@ -261,26 +264,90 @@ class RoomDataMapper(private val context: Context) {
         return lengthLines
     }
 
-    private fun mapWallWindows(windows: List<WallWindowEntity>?): List<WallWindowData> {
+    private fun mapWallWindows(windows: List<WallWindowEntity>?, wallThickness: Float): List<WallWindowData> {
+        val windowThickness = context.dpToPx(wallThickness + 1)
+
         return windows?.map { window ->
+            // Вычисляем угол окна
+            val angle = atan2((window.endY - window.startY).toDouble(), (window.endX - window.startX).toDouble()).toFloat()
+
+            // Смещение по нормали для толщины окна
+            val offsetX = (windowThickness / 2) * sin(angle)
+            val offsetY = (windowThickness / 2) * cos(angle)
+
+            // Координаты четырех углов прямоугольника окна
+            val rectStartX1 = window.startX + offsetX
+            val rectStartY1 = window.startY - offsetY
+            val rectEndX1 = window.endX + offsetX
+            val rectEndY1 = window.endY - offsetY
+            val rectStartX2 = window.startX - offsetX
+            val rectStartY2 = window.startY + offsetY
+            val rectEndX2 = window.endX - offsetX
+            val rectEndY2 = window.endY + offsetY
+
+            // Центральная линия
+            val centerStartX = (rectStartX1 + rectStartX2) / 2
+            val centerStartY = (rectStartY1 + rectStartY2) / 2
+            val centerEndX = (rectEndX1 + rectEndX2) / 2
+            val centerEndY = (rectEndY1 + rectEndY2) / 2
+
             WallWindowData(
                 uid = window.uid,
                 startX = window.startX,
                 startY = window.startY,
                 endX = window.endX,
-                endY = window.endY
+                endY = window.endY,
+                rectStartX1 = rectStartX1,
+                rectStartY1 = rectStartY1,
+                rectEndX1 = rectEndX1,
+                rectEndY1 = rectEndY1,
+                rectStartX2 = rectStartX2,
+                rectStartY2 = rectStartY2,
+                rectEndX2 = rectEndX2,
+                rectEndY2 = rectEndY2,
+                centerStartX = centerStartX,
+                centerStartY = centerStartY,
+                centerEndX = centerEndX,
+                centerEndY = centerEndY
             )
         } ?: emptyList()
     }
 
-    private fun mapWallOpenings(openings: List<WallOpeningEntity>?): List<WallOpeningData> {
+    private fun mapWallOpenings(openings: List<WallOpeningEntity>?, wallThickness: Float): List<WallOpeningData> {
+        val openingThickness = context.dpToPx(wallThickness + 1)
+
         return openings?.map { opening ->
+            // Вычисляем угол открытия
+            val angle = atan2((opening.endY - opening.startY).toDouble(), (opening.endX - opening.startX).toDouble()).toFloat()
+
+            // Смещение по нормали для толщины открытия
+            val offsetX = (openingThickness / 2) * sin(angle)
+            val offsetY = (openingThickness / 2) * cos(angle)
+
+            // Координаты четырех углов прямоугольника открытия
+            val rectStartX1 = opening.startX + offsetX
+            val rectStartY1 = opening.startY - offsetY
+            val rectEndX1 = opening.endX + offsetX
+            val rectEndY1 = opening.endY - offsetY
+            val rectStartX2 = opening.startX - offsetX
+            val rectStartY2 = opening.startY + offsetY
+            val rectEndX2 = opening.endX - offsetX
+            val rectEndY2 = opening.endY + offsetY
+
             WallOpeningData(
                 uid = opening.uid,
                 startX = opening.startX,
                 startY = opening.startY,
                 endX = opening.endX,
-                endY = opening.endY
+                endY = opening.endY,
+                rectStartX1 = rectStartX1,
+                rectStartY1 = rectStartY1,
+                rectEndX1 = rectEndX1,
+                rectEndY1 = rectEndY1,
+                rectStartX2 = rectStartX2,
+                rectStartY2 = rectStartY2,
+                rectEndX2 = rectEndX2,
+                rectEndY2 = rectEndY2
             )
         } ?: emptyList()
     }

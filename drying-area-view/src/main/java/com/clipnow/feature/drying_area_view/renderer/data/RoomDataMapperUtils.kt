@@ -52,7 +52,19 @@ fun applyOffsetToRoom(room: RoomData): RoomData {
                 startX = window.startX + offsetX,
                 startY = window.startY + offsetY,
                 endX = window.endX + offsetX,
-                endY = window.endY + offsetY
+                endY = window.endY + offsetY,
+                rectStartX1 = window.rectStartX1 + offsetX,
+                rectStartY1 = window.rectStartY1 + offsetY,
+                rectEndX1 = window.rectEndX1 + offsetX,
+                rectEndY1 = window.rectEndY1 + offsetY,
+                rectStartX2 = window.rectStartX2 + offsetX,
+                rectStartY2 = window.rectStartY2 + offsetY,
+                rectEndX2 = window.rectEndX2 + offsetX,
+                rectEndY2 = window.rectEndY2 + offsetY,
+                centerStartX = window.centerStartX + offsetX,
+                centerStartY = window.centerStartY + offsetX,
+                centerEndX = window.centerEndX + offsetX,
+                centerEndY = window.centerEndY + offsetX
             )
         }
 
@@ -62,7 +74,15 @@ fun applyOffsetToRoom(room: RoomData): RoomData {
                 startX = opening.startX + offsetX,
                 startY = opening.startY + offsetY,
                 endX = opening.endX + offsetX,
-                endY = opening.endY + offsetY
+                endY = opening.endY + offsetY,
+                rectStartX1 = opening.rectStartX1 + offsetX,
+                rectStartY1 = opening.rectStartY1 + offsetY,
+                rectEndX1 = opening.rectEndX1 + offsetX,
+                rectEndY1 = opening.rectEndY1 + offsetY,
+                rectStartX2 = opening.rectStartX2 + offsetX,
+                rectStartY2 = opening.rectStartY2 + offsetY,
+                rectEndX2 = opening.rectEndX2 + offsetX,
+                rectEndY2 = opening.rectEndY2 + offsetY,
             )
         }
 
