@@ -131,6 +131,7 @@ class RoomMapper {
 
         return RoomEntity(
             uid = apiRoom.panoIds.first(),
+            name = apiRoom.data.name,
             walls = walls,
             dryingArea = dryingArea,
         )

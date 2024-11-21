@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 
 data class RoomEntity(
     val uid: String,
+    val name: String,
     val dryingArea: DryingAreaEntity,
     val walls: List<WallEntity>
 )

@@ -13,8 +13,13 @@ data class RoomData(val perimeter: PerimeterData, val dryingArea: DryingAreaData
         var maxX = Float.MIN_VALUE
         var maxY = Float.MIN_VALUE
 
-        // Find the minimum and maximum coordinates across all length lines
+        // Find the minimum and maximum coordinates across all lines
         perimeter.walls.forEach { wall ->
+            minX = minOf(minX, wall.startX, wall.endX)
+            minY = minOf(minY, wall.startY, wall.endY)
+            maxX = maxOf(maxX, wall.startX, wall.endX)
+            maxY = maxOf(maxY, wall.startY, wall.endY)
+
             wall.lengthLines.forEach { line ->
                 minX = minOf(minX, line.startX, line.endX)
                 minY = minOf(minY, line.startY, line.endY)
