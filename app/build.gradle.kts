@@ -17,6 +17,13 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15" // Убедитесь, что версия актуальна
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -39,6 +46,13 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation( libs.androidx.activity.compose) // Для интеграции с Activity
+
+    implementation( libs.androidx.ui.tooling.preview )// Для предпросмотра
+    implementation(libs.androidx.foundation) // Основные элементы
+    implementation( libs.androidx.material3) // Material Design 3
+    implementation (libs.androidx.lifecycle.runtime.compose) // Для работы с ViewModel и жизненным циклом
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

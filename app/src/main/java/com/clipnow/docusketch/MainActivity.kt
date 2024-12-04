@@ -3,12 +3,14 @@ package com.clipnow.docusketch
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.clipnow.feature.drying_area_view.RoomView
-import com.clipnow.feature.drying_area_view.mock.RoomRepo
-import com.clipnow.feature.drying_area_view.renderer.data.RoomDataMapper
+import com.clipnow.feature.sketch_view.renderer.view.SketchView
+import com.clipnow.feature.sketch_view.mock.RoomRepo
+import com.clipnow.feature.sketch_view.renderer.compose.SketchComposeView
+import com.clipnow.feature.sketch_view.renderer.data.RoomDataMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -28,11 +30,18 @@ class MainActivity : AppCompatActivity() {
         showRoomData()
     }
 
-    private fun showRoomData() = lifecycleScope.launch(Dispatchers.Default){
+    private fun showRoomData() = lifecycleScope.launch(Dispatchers.Default) {
         val result = RoomRepo.getRooms()
-        val room = result.last()
+        val room = result.first()
         val roomData = roomMapper.mapRoom(room)
 
-        findViewById<RoomView>(R.id.room_view)?.setRoomData(roomData)
+        launch(Dispatchers.Main) {
+            findViewById<SketchView>(R.id.room_view)?.setRoomData(roomData)
+        }
+        /*launch(Dispatchers.Main) {
+            findViewById<ComposeView>(R.id.room_view)?.setContent {
+                SketchComposeView(roomData = roomData)
+            }
+        }*/
     }
 }
